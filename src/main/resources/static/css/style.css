@@ -1,0 +1,337 @@
+/* =========================================================
+   AnimeHub Design Tokens
+   ---------------------------------------------------------
+   Color  : deep violet-black canvas + sakura-pink accent
+   Type   : Space Grotesk (display) / Inter (body) / JetBrains Mono (data)
+   Motif  : ranking numbers rendered huge + translucent behind posters
+   ========================================================= */
+
+:root {
+    --bg:           #14121F;
+    --surface:      #1E1B2E;
+    --surface-2:    #272340;
+    --accent:       #FF5D8F;
+    --accent-dim:   #C24770;
+    --teal:         #5DD8C0;
+    --gold:         #F0B84C;
+    --text:         #F2EFFA;
+    --text-muted:   #9C97B8;
+    --border:       #322C4D;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body:    'Inter', sans-serif;
+    --font-mono:    'JetBrains Mono', monospace;
+
+    --radius: 10px;
+    --max-width: 1180px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.55;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+img { max-width: 100%; display: block; }
+
+h1, h2, h3 {
+    font-family: var(--font-display);
+    margin: 0 0 0.5em;
+    letter-spacing: -0.01em;
+}
+
+/* Visible keyboard focus everywhere - accessibility floor */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+}
+
+/* ===================== Layout shell ===================== */
+.page-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 1.25rem 3rem;
+}
+
+/* ===================== Header / Nav ===================== */
+.site-header {
+    background: rgba(20, 18, 31, 0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.header-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0.9rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text);
+    white-space: nowrap;
+}
+.brand span { color: var(--accent); }
+.brand:hover { text-decoration: none; }
+
+.main-nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+.main-nav a { color: var(--text-muted); font-weight: 500; }
+.main-nav a:hover { color: var(--text); text-decoration: none; }
+
+.nav-search { flex: 1 1 200px; min-width: 160px; }
+.nav-search form { display: flex; }
+.nav-search input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius) 0 0 var(--radius);
+    font-family: var(--font-body);
+}
+.nav-search button {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-left: none;
+    color: var(--text);
+    padding: 0.5rem 0.8rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    cursor: pointer;
+}
+
+.nav-auth { display: flex; align-items: center; gap: 0.6rem; }
+.welcome-text { color: var(--text-muted); font-size: 0.9rem; }
+.inline-form { display: inline; }
+
+.btn-primary, .btn-ghost {
+    font-family: var(--font-body);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn-primary { background: var(--accent); color: #1a0e14; }
+.btn-primary:hover { background: #ff7da3; text-decoration: none; }
+.btn-ghost { background: transparent; border-color: var(--border); color: var(--text); }
+.btn-ghost:hover { border-color: var(--accent); text-decoration: none; }
+
+/* ===================== Hero ===================== */
+.hero {
+    padding: 3rem 1.25rem 2rem;
+    text-align: center;
+}
+.hero h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+.hero p { color: var(--text-muted); max-width: 560px; margin: 0 auto; }
+
+.section-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 2.5rem 0 1.2rem;
+}
+.section-title h2 { font-size: 1.4rem; }
+.section-title a { font-size: 0.9rem; }
+
+/* ===================== Card grid ===================== */
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.1rem;
+}
+
+.anime-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.anime-card:hover { transform: translateY(-3px); border-color: var(--accent-dim); }
+
+.anime-card .poster-wrap { aspect-ratio: 2/3; overflow: hidden; background: var(--surface-2); }
+.anime-card img { width: 100%; height: 100%; object-fit: cover; }
+
+.anime-card .card-body { padding: 0.6rem 0.7rem 0.8rem; }
+.anime-card .card-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.anime-card .card-meta { font-size: 0.78rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+.score-badge { color: var(--gold); font-family: var(--font-mono); }
+
+/* ===== Signature element: ranking number behind the poster ===== */
+.rank-card { position: relative; padding-left: 0; }
+.rank-number {
+    position: absolute;
+    top: -0.4rem;
+    left: -0.3rem;
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    opacity: 0.22;
+    line-height: 1;
+    z-index: 1;
+    pointer-events: none;
+}
+.rank-card .poster-wrap { position: relative; z-index: 2; }
+
+/* ===================== Forms (login/register/search) ===================== */
+.form-card {
+    max-width: 420px;
+    margin: 3rem auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+}
+.form-card h1 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+
+.field { margin-bottom: 1.1rem; }
+.field label { display: block; margin-bottom: 0.35rem; font-size: 0.88rem; color: var(--text-muted); }
+.field input, .field select {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius);
+    font-family: var(--font-body);
+}
+
+.alert {
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+}
+.alert-error { background: rgba(255, 93, 143, 0.12); border: 1px solid var(--accent-dim); color: #ffb3c9; }
+.alert-success { background: rgba(93, 216, 192, 0.12); border: 1px solid var(--teal); color: var(--teal); }
+
+.btn-block {
+    width: 100%;
+    background: var(--accent);
+    color: #1a0e14;
+    border: none;
+    padding: 0.75rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+.btn-block:hover { background: #ff7da3; }
+
+.form-footer-link { text-align: center; margin-top: 1.2rem; font-size: 0.88rem; color: var(--text-muted); }
+
+/* ===================== Anime detail page ===================== */
+.detail-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+.detail-poster img { border-radius: var(--radius); border: 1px solid var(--border); }
+
+.detail-info h1 { font-size: 1.8rem; }
+.genre-tag {
+    display: inline-block;
+    background: rgba(93, 216, 192, 0.12);
+    color: var(--teal);
+    border: 1px solid var(--teal);
+    border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.78rem;
+    margin: 0 0.4rem 0.4rem 0;
+}
+.detail-meta-row { display: flex; gap: 1.5rem; flex-wrap: wrap; margin: 1rem 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem; }
+.detail-meta-row strong { color: var(--gold); }
+.synopsis { margin: 1.2rem 0; color: var(--text); max-width: 700px; }
+
+.trailer-wrap {
+    margin-top: 1.5rem;
+    aspect-ratio: 16/9;
+    max-width: 640px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+.trailer-wrap iframe { width: 100%; height: 100%; border: 0; }
+
+/* ===================== Watchlist page ===================== */
+.watchlist-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+.watchlist-table th { text-align: left; color: var(--text-muted); font-size: 0.82rem; padding: 0.6rem; border-bottom: 1px solid var(--border); }
+.watchlist-table td { padding: 0.6rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.watchlist-table img { width: 50px; height: 70px; object-fit: cover; border-radius: 6px; }
+.watchlist-table select {
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0.3rem 0.5rem; font-family: var(--font-body); font-size: 0.85rem;
+}
+.btn-remove {
+    background: transparent; border: 1px solid var(--accent-dim); color: var(--accent);
+    border-radius: 6px; padding: 0.3rem 0.7rem; cursor: pointer; font-size: 0.82rem;
+}
+.btn-remove:hover { background: rgba(255, 93, 143, 0.12); }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+
+/* ===================== Pagination ===================== */
+.pagination { display: flex; justify-content: center; gap: 0.6rem; margin-top: 2rem; }
+.pagination a {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.45rem 0.9rem;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+.pagination a:hover { border-color: var(--accent); text-decoration: none; }
+
+/* ===================== Footer ===================== */
+.site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+}
+
+/* ===================== Responsive ===================== */
+@media (max-width: 720px) {
+    .detail-layout { grid-template-columns: 1fr; }
+    .detail-poster { max-width: 200px; margin: 0 auto; }
+    .header-inner { gap: 0.8rem; }
+    .nav-search { order: 3; flex-basis: 100%; }
+    .rank-number { font-size: 2.2rem; }
+}

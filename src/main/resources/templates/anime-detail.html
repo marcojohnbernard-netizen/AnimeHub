@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head(${anime.title})}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="page-container">
+    <div class="detail-layout">
+        <div class="detail-poster">
+            <img th:src="${anime.posterUrl}" th:alt="${anime.title}">
+
+            <!-- Watchlist controls - lalabas lang kung naka-login -->
+            <div sec:authorize="isAuthenticated()" style="margin-top:1rem;">
+                <form th:if="${inWatchlist == null or !inWatchlist}" action="/watchlist/add" method="post">
+                    <input type="hidden" name="malId" th:value="${anime.malId}">
+                    <input type="hidden" name="title" th:value="${anime.title}">
+                    <input type="hidden" name="imageUrl" th:value="${anime.posterUrl}">
+                    <input type="hidden" name="redirectTo" th:value="${'/anime/' + anime.malId}">
+                    <button type="submit" class="btn-block">+ Idagdag sa My List</button>
+                </form>
+                <form th:if="${inWatchlist != null and inWatchlist}" action="/watchlist/remove" method="post">
+                    <input type="hidden" name="malId" th:value="${anime.malId}">
+                    <input type="hidden" name="redirectTo" th:value="${'/anime/' + anime.malId}">
+                    <button type="submit" class="btn-block" style="background:var(--surface-2); color:var(--accent); border:1px solid var(--accent-dim);">
+                        ✓ Nasa My List — Alisin
+                    </button>
+                </form>
+            </div>
+            <a sec:authorize="!isAuthenticated()" href="/login" class="btn-block" style="display:block; text-align:center;">
+                Mag-login para idagdag sa list
+            </a>
+        </div>
+
+        <div class="detail-info">
+            <h1 th:text="${anime.title}">Anime Title</h1>
+            <p th:if="${anime.titleEnglish != null and anime.titleEnglish != anime.title}"
+               style="color:var(--text-muted); margin-top:-0.5rem;" th:text="${anime.titleEnglish}"></p>
+
+            <div>
+                <span class="genre-tag" th:each="genre : ${anime.genres}" th:text="${genre.name}">Genre</span>
+            </div>
+
+            <div class="detail-meta-row">
+                <span th:if="${anime.score != null}">Score: <strong th:text="${anime.score}">0.0</strong></span>
+                <span th:if="${anime.rank != null}">Rank: <strong th:text="'#' + ${anime.rank}">#1</strong></span>
+                <span th:if="${anime.episodes != null}">Episodes: <strong th:text="${anime.episodes}">?</strong></span>
+                <span th:if="${anime.year != null}">Year: <strong th:text="${anime.year}">2024</strong></span>
+                <span th:if="${anime.status != null}">Status: <strong th:text="${anime.status}">Airing</strong></span>
+            </div>
+
+            <p class="synopsis" th:text="${anime.synopsis != null ? anime.synopsis : 'Walang available na synopsis.'}">
+                Synopsis text here.
+            </p>
+
+            <div class="trailer-wrap" th:if="${anime.trailer != null and anime.trailer.youtubeId != null}">
+                <iframe th:src="'https://www.youtube.com/embed/' + ${anime.trailer.youtubeId}"
+                        title="Official trailer" allowfullscreen></iframe>
+            </div>
+            <p th:if="${anime.trailer == null or anime.trailer.youtubeId == null}" style="color:var(--text-muted);">
+                Walang available na official trailer.
+            </p>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Login')}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="page-container">
+    <div class="form-card">
+        <h1>Welcome Back</h1>
+
+        <p class="alert alert-success" th:if="${param.registered != null}">
+            Successful ang registration! Mag-login na.
+        </p>
+        <p class="alert alert-error" th:if="${param.error != null}">
+            Mali ang username o password.
+        </p>
+
+        <form action="/login" method="post">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-block">Login</button>
+        </form>
+
+        <p class="form-footer-link">Wala ka pang account? <a href="/register">Mag-sign up</a></p>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

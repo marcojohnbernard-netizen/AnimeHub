@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' · AnimeHub'">AnimeHub</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header" th:fragment="header">
+    <div class="header-inner">
+        <a href="/" class="brand">Anime<span>Hub</span></a>
+        <nav class="main-nav">
+            <a href="/">Home</a>
+            <a href="/ranking">Top Ranking</a>
+            <a href="/search">Search</a>
+            <a href="/watchlist" sec:authorize="isAuthenticated()">My List</a>
+        </nav>
+        <div class="nav-search">
+            <form action="/search" method="get">
+                <input type="text" name="q" placeholder="Hanapin ang anime..." aria-label="Search anime">
+                <button type="submit" aria-label="Search">🔍</button>
+            </form>
+        </div>
+        <div class="nav-auth">
+            <span sec:authorize="isAuthenticated()" class="welcome-text">
+                Hi, <span sec:authentication="name"></span>
+            </span>
+            <form sec:authorize="isAuthenticated()" action="/logout" method="post" class="inline-form">
+                <button type="submit" class="btn-ghost">Logout</button>
+            </form>
+            <a sec:authorize="!isAuthenticated()" href="/login" class="btn-ghost">Login</a>
+            <a sec:authorize="!isAuthenticated()" href="/register" class="btn-primary">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<footer class="site-footer" th:fragment="footer">
+    <p>AnimeHub &middot; School project &middot; Anime info powered by <a href="https://jikan.moe" target="_blank" rel="noopener">Jikan API</a> (MyAnimeList data)</p>
+    <script th:src="@{/js/main.js}"></script>
+</footer>
+
+</body>
+</html>
