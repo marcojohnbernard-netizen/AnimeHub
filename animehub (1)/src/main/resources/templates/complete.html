@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Complete Anime')}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="page-container">
+    <div class="section-title"><h2>✅ Complete Anime</h2></div>
+
+    <div class="anime-grid" th:if="${not #lists.isEmpty(animeList)}">
+        <a th:each="anime : ${animeList}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card">
+            <div class="poster-wrap"><img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy"></div>
+            <div class="card-body">
+                <p class="card-title" th:text="${anime.title}">Title</p>
+                <div class="card-meta">
+                    <span th:text="${anime.type}">TV</span>
+                    <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(animeList)}">No data available right now.</p>
+
+    <div class="pagination">
+        <a th:if="${currentPage > 1}" th:href="@{/complete(page=${currentPage - 1})}">← Previous</a>
+        <a th:href="@{/complete(page=${currentPage + 1})}">Next →</a>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

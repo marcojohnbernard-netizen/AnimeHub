@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Login')}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="page-container">
+    <div class="form-card">
+        <h1>Welcome Back</h1>
+
+        <p class="alert alert-success" th:if="${param.registered != null}">
+            Registration successful! You can log in now.
+        </p>
+        <p class="alert alert-error" th:if="${param.error != null}">
+            Incorrect username or password.
+        </p>
+
+        <form action="/login" method="post">
+            <div class="field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-block">Login</button>
+        </form>
+
+        <p class="form-footer-link">Don't have an account? <a href="/register">Sign up</a></p>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>

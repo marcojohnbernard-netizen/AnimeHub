@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Settings')}"></head>
+<body>
+<div th:replace="~{fragments :: header}"></div>
+
+<main class="page-container">
+    <div class="form-card" style="text-align:left;">
+        <h1 style="text-align:left;">Settings</h1>
+
+        <div th:if="${loggedIn}">
+            <div class="field">
+                <label>Logged in as</label>
+                <p style="margin:0; font-weight:600;" th:text="${username}">username</p>
+            </div>
+            <div class="field">
+                <label>Account</label>
+                <p style="margin:0; color:var(--text-muted); font-size:0.88rem;">
+                    Password changes and profile editing aren't available yet — coming soon.
+                </p>
+            </div>
+            <form action="/logout" method="post">
+                <button type="submit" class="btn-block">Logout</button>
+            </form>
+        </div>
+
+        <div th:unless="${loggedIn}">
+            <p style="color:var(--text-muted);">You're browsing as a guest. Log in to access account settings and sync your watchlist.</p>
+            <a href="/login" class="btn-block" style="display:block; text-align:center;">Login</a>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
