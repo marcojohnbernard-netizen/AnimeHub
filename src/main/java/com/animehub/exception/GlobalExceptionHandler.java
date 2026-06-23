@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     public String handleJikanApiException(JikanApiException ex, Model model) {
         log.warn("Jikan API error: {}", ex.getMessage());
         model.addAttribute("errorMessage",
-                "Hindi available ang anime data ngayon. Pakisubukan ulit sa ilang segundo.");
+                "Anime data isn't available right now. Please try again in a few seconds.");
         return "error";
     }
 
@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     public String handleGenericException(Exception ex, Model model) {
         log.error("Unexpected error", ex);
         model.addAttribute("errorMessage",
-                "May nagkamali sa server. Pakisubukan ulit mamaya.");
+                "Something went wrong on our end. Please try again later.");
         return "error";
     }
 }

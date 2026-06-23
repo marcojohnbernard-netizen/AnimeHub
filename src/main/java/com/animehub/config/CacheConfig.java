@@ -22,7 +22,8 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager(
-                "latestAnime", "topAnime", "animeSearch", "animeDetail"
+                "latestAnime", "topAnime", "animeSearch", "animeDetail",
+                "trendingAnime", "completeAnime", "genreAnime"
         );
         manager.setCaffeine(Caffeine.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES)

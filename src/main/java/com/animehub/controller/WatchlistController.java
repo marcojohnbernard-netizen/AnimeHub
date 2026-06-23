@@ -53,4 +53,13 @@ public class WatchlistController {
         watchlistService.updateStatus(auth.getName(), malId, status);
         return "redirect:/watchlist";
     }
+
+    @PostMapping("/episode")
+    public String updateEpisode(@RequestParam Integer malId,
+                                 @RequestParam int episode,
+                                 @RequestParam(required = false) String redirectTo,
+                                 Authentication auth) {
+        watchlistService.updateEpisodeProgress(auth.getName(), malId, episode);
+        return "redirect:" + (redirectTo != null ? redirectTo : "/watchlist");
+    }
 }

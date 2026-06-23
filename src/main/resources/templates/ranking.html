@@ -11,7 +11,7 @@
 
     <div class="anime-grid" th:if="${not #lists.isEmpty(animeList)}">
         <a th:each="anime, iter : ${animeList}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card rank-card">
-            <span class="rank-number" th:text="'#' + ${(currentPage - 1) * 20 + iter.count}">#1</span>
+            <span class="rank-number" th:text="'#' + ${(currentPage - 1) * 24 + iter.count}">#1</span>
             <div class="poster-wrap">
                 <img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy">
             </div>
@@ -25,7 +25,7 @@
         </a>
     </div>
     <p class="empty-state" th:if="${#lists.isEmpty(animeList)}">
-        Hindi available ang ranking data ngayon. Pakisubukan ulit mamaya.
+        Ranking data isn't available right now. Please try again later.
     </p>
 
     <div class="pagination">

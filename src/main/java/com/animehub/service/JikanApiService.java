@@ -41,12 +41,12 @@ public class JikanApiService {
         this.baseUrl = baseUrl;
     }
 
-    /** Mga anime na kasalukuyang umaairing season ("latest anime"). */
+    /** Mga anime na kasalumuhang umaairing season ("latest anime"). */
     @Cacheable(value = "latestAnime", key = "#page")
     public List<AnimeDto> getLatestAnime(int page) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/seasons/now")
                 .queryParam("page", page)
-                .queryParam("limit", 20)
+                .queryParam("limit", 24)
                 .toUriString();
         return fetchList(url, "latest anime");
     }
@@ -56,9 +56,49 @@ public class JikanApiService {
     public List<AnimeDto> getTopAnime(int page) {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/top/anime")
                 .queryParam("page", page)
-                .queryParam("limit", 20)
+                .queryParam("limit", 24)
                 .toUriString();
         return fetchList(url, "top anime ranking");
+    }
+
+    /** Currently trending - same ranking pool but sorted by popularity (most-watched right now). */
+    @Cacheable(value = "trendingAnime", key = "#page")
+    public List<AnimeDto> getTrendingAnime(int page) {
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/top/anime")
+                .queryParam("filter", "bypopularity")
+                .queryParam("page", page)
+                .queryParam("limit", 24)
+                .toUriString();
+        return fetchList(url, "trending anime");
+    }
+
+    /** Anime that have finished airing completely - good for binge-watch browsing. */
+    @Cacheable(value = "completeAnime", key = "#page")
+    public List<AnimeDto> getCompleteAnime(int page) {
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/anime")
+                .queryParam("status", "complete")
+                .queryParam("order_by", "popularity")
+                .queryParam("sort", "asc")
+                .queryParam("page", page)
+                .queryParam("limit", 24)
+                .toUriString();
+        return fetchList(url, "complete anime");
+    }
+
+    /**
+     * Browse by genre. Jikan identifies genres by numeric ID - see GENRES map
+     * in GenreController for the common ones we expose in the UI.
+     */
+    @Cacheable(value = "genreAnime", key = "#genreId + '-' + #page")
+    public List<AnimeDto> getAnimeByGenre(int genreId, int page) {
+        String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/anime")
+                .queryParam("genres", genreId)
+                .queryParam("order_by", "popularity")
+                .queryParam("sort", "asc")
+                .queryParam("page", page)
+                .queryParam("limit", 24)
+                .toUriString();
+        return fetchList(url, "genre anime");
     }
 
     /** Maghanap ng anime base sa keyword. */
@@ -70,31 +110,31 @@ public class JikanApiService {
         String url = UriComponentsBuilder.fromHttpUrl(baseUrl + "/anime")
                 .queryParam("q", query.trim())
                 .queryParam("page", page)
-                .queryParam("limit", 20)
+                .queryParam("limit", 24)
                 .queryParam("order_by", "popularity")
                 .queryParam("sort", "asc")
                 .toUriString();
         return fetchList(url, "search results para sa \"" + query + "\"");
     }
 
-    /** Detalyadong impormasyon ng isang partikular na anime (kasama ang trailer). */
+    /** Detailed information for a single anime (including the trailer). */
     @Cacheable(value = "animeDetail", key = "#malId")
     public AnimeDto getAnimeDetail(int malId) {
         String url = baseUrl + "/anime/" + malId + "/full";
         try {
             AnimeDetailResponse response = restTemplate.getForObject(url, AnimeDetailResponse.class);
             if (response == null || response.getData() == null) {
-                throw new JikanApiException("Walang nahanap na anime para sa ID: " + malId);
+                throw new JikanApiException("No anime found for ID: " + malId);
             }
             return response.getData();
         } catch (HttpClientErrorException.NotFound e) {
-            throw new JikanApiException("Hindi nahanap ang anime na ito.", e);
+            throw new JikanApiException("This anime could not be found.", e);
         } catch (ResourceAccessException e) {
-            log.warn("Timeout/network error sa Jikan API: {}", e.getMessage());
-            throw new JikanApiException("Sobrang tagal sumagot ang anime data service.", e);
+            log.warn("Timeout/network error from Jikan API: {}", e.getMessage());
+            throw new JikanApiException("The anime data service took too long to respond.", e);
         } catch (Exception e) {
-            log.error("Hindi inaasahang error sa Jikan API call", e);
-            throw new JikanApiException("Hindi makuha ang anime details ngayon.", e);
+            log.error("Unexpected error during Jikan API call", e);
+            throw new JikanApiException("Could not retrieve anime details right now.", e);
         }
     }
 
@@ -104,7 +144,7 @@ public class JikanApiService {
             AnimeListResponse response = restTemplate.getForObject(url, AnimeListResponse.class);
             return response != null ? response.getData() : Collections.emptyList();
         } catch (HttpClientErrorException.TooManyRequests e) {
-            log.warn("Rate-limited ng Jikan API habang kinukuha ang {}", contextLabel);
+            log.warn("Rate-limited by Jikan API while fetching {}", contextLabel);
             // Hindi natin itinatapon ang error dito - mas mabuting mag-return ng
             // walang lamang listahan kaysa biglain ang user ng error page
             // dahil lang sa rate limit ng third-party API.

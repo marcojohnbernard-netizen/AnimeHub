@@ -15,7 +15,8 @@
             <th></th>
             <th>Title</th>
             <th>Status</th>
-            <th>Idinagdag</th>
+            <th>Progress</th>
+            <th>Added</th>
             <th></th>
         </tr>
         </thead>
@@ -34,11 +35,19 @@
                     </select>
                 </form>
             </td>
+            <td>
+                <form action="/watchlist/episode" method="post" style="display:flex; gap:0.3rem; align-items:center;">
+                    <input type="hidden" name="malId" th:value="${item.animeMalId}">
+                    <input type="number" name="episode" min="0" th:value="${item.episodeProgress}"
+                           style="width:55px; background:var(--surface-2); border:1px solid var(--border); color:var(--text); border-radius:6px; padding:0.25rem 0.4rem; font-size:0.85rem;">
+                    <button type="submit" class="btn-ghost" style="font-size:0.75rem; padding:0.3rem 0.5rem;">Set</button>
+                </form>
+            </td>
             <td th:text="${#temporals.format(item.addedAt, 'MMM d, yyyy')}" style="color:var(--text-muted); font-size:0.85rem;"></td>
             <td>
                 <form action="/watchlist/remove" method="post">
                     <input type="hidden" name="malId" th:value="${item.animeMalId}">
-                    <button type="submit" class="btn-remove">Alisin</button>
+                    <button type="submit" class="btn-remove">Remove</button>
                 </form>
             </td>
         </tr>
@@ -46,8 +55,8 @@
     </table>
 
     <div class="empty-state" th:if="${#lists.isEmpty(items)}">
-        <p>Walang anime sa list mo pa.</p>
-        <a href="/" class="btn-primary">Maghanap ng panoorin →</a>
+        <p>Your list is empty.</p>
+        <a href="/" class="btn-primary">Find something to watch →</a>
     </div>
 </main>
 

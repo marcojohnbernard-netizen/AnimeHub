@@ -38,11 +38,18 @@ public class AnimeController {
         AnimeDto anime = jikanApiService.getAnimeDetail(malId);
         model.addAttribute("anime", anime);
 
-        // Kung naka-login, sabihin sa template kung naka-add na sa watchlist
-        // para malaman kung "Add" o "Remove" button ang ipapakita
+        // If logged in, tell the template whether this is already on the
+        // watchlist (and at what episode) so it can show "Add" vs "Remove"
+        // plus the episode progress tracker.
         if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
             boolean inWatchlist = watchlistService.isInWatchlist(auth.getName(), malId);
             model.addAttribute("inWatchlist", inWatchlist);
+            if (inWatchlist) {
+                watchlistService.getWatchlistForUser(auth.getName()).stream()
+                        .filter(item -> item.getAnimeMalId().equals(malId))
+                        .findFirst()
+                        .ifPresent(item -> model.addAttribute("episodeProgress", item.getEpisodeProgress()));
+            }
         }
         return "anime-detail";
     }

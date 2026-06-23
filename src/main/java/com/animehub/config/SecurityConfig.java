@@ -29,7 +29,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Pwedeng tingnan kahit walang account - browsing/search/ranking ay dapat public
                 .requestMatchers(
-                        "/", "/search", "/ranking", "/anime/**",
+                        "/", "/search", "/ranking", "/anime/**", "/latest", "/trending",
+                        "/complete", "/genre/**", "/settings",
                         "/register", "/login", "/css/**", "/js/**", "/h2-console/**"
                 ).permitAll()
                 // Watchlist ay dapat may account muna

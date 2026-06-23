@@ -6,9 +6,9 @@
 
 <main class="page-container">
     <div class="empty-state" style="margin-top:3rem;">
-        <h2>⚠️ May Problema</h2>
-        <p th:text="${errorMessage != null ? errorMessage : 'Hindi inaasahang error.'}">Error message</p>
-        <a href="/" class="btn-primary">Bumalik sa Home →</a>
+        <h2>⚠️ Something Went Wrong</h2>
+        <p th:text="${errorMessage != null ? errorMessage : 'An unexpected error occurred.'}">Error message</p>
+        <a href="/" class="btn-primary">Back to Home →</a>
     </div>
 </main>
 

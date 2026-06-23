@@ -20,13 +20,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Kailangan ng username")
-    @Size(min = 3, max = 20, message = "Username dapat 3-20 characters")
+    @NotBlank(message = "Username is required")
+    @Size(min = 3, max = 20, message = "Username must be 3-20 characters")
     @Column(nullable = false)
     private String username;
 
-    @NotBlank(message = "Kailangan ng email")
-    @Email(message = "Hindi valid na email format")
+    @NotBlank(message = "Email is required")
+    @Email(message = "Not a valid email format")
     @Column(nullable = false)
     private String email;
 

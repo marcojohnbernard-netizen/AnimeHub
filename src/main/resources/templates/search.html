@@ -6,13 +6,13 @@
 
 <main class="page-container">
     <div class="section-title">
-        <h2 th:text="${query != null and !query.isBlank()} ? 'Mga resulta para sa &quot;' + ${query} + '&quot;' : 'Maghanap ng Anime'">Search</h2>
+        <h2 th:text="${query != null and !query.isBlank()} ? 'Results for &quot;' + ${query} + '&quot;' : 'Search Anime'">Search</h2>
     </div>
 
     <form action="/search" method="get" style="max-width:480px; display:flex; gap:0.6rem; margin-bottom:1.5rem;">
-        <input type="text" name="q" th:value="${query}" placeholder="Hal. Jujutsu Kaisen, One Piece..."
+        <input type="text" name="q" th:value="${query}" placeholder="e.g. Jujutsu Kaisen, One Piece..."
                style="flex:1; background:var(--surface); border:1px solid var(--border); color:var(--text); padding:0.6rem 0.8rem; border-radius:10px;">
-        <button type="submit" class="btn-primary">Hanapin</button>
+        <button type="submit" class="btn-primary">Search</button>
     </form>
 
     <div class="anime-grid" th:if="${not #lists.isEmpty(results)}">
@@ -31,7 +31,7 @@
     </div>
 
     <p class="empty-state" th:if="${query != null and !query.isBlank() and #lists.isEmpty(results)}">
-        Walang nahanap na anime para sa "<span th:text="${query}"></span>". Subukan ang ibang keyword.
+        No anime found for "<span th:text="${query}"></span>". Try a different keyword.
     </p>
 
     <div class="pagination" th:if="${not #lists.isEmpty(results)}">

@@ -31,7 +31,7 @@ public class WatchlistService {
         User user = getUserOrThrow(username);
 
         if (watchlistRepository.existsByUserAndAnimeMalId(user, animeMalId)) {
-            // Idempotent - kung naka-add na, hindi error, tahimik lang itong i-ignore
+            // Idempotent - if already added, silently ignore instead of erroring
             return;
         }
         watchlistRepository.save(new WatchlistItem(user, animeMalId, title, imageUrl));
@@ -41,8 +41,28 @@ public class WatchlistService {
     public void updateStatus(String username, Integer animeMalId, WatchStatus newStatus) {
         User user = getUserOrThrow(username);
         WatchlistItem item = watchlistRepository.findByUserAndAnimeMalId(user, animeMalId)
-                .orElseThrow(() -> new IllegalArgumentException("Wala sa watchlist mo ang anime na ito."));
+                .orElseThrow(() -> new IllegalArgumentException("This anime isn't in your list."));
         item.setStatus(newStatus);
+        watchlistRepository.save(item);
+    }
+
+    /**
+     * Updates how many episodes the user has tracked as watched. This is a
+     * manual progress tracker (like MyAnimeList/AniList) - not a video
+     * player, so episodeCount is clamped to be non-negative only; we don't
+     * validate against the anime's real episode total here since that would
+     * require an extra API call per update.
+     */
+    @Transactional
+    public void updateEpisodeProgress(String username, Integer animeMalId, int episodeCount) {
+        User user = getUserOrThrow(username);
+        WatchlistItem item = watchlistRepository.findByUserAndAnimeMalId(user, animeMalId)
+                .orElseThrow(() -> new IllegalArgumentException("This anime isn't in your list."));
+        item.setEpisodeProgress(Math.max(0, episodeCount));
+        // Mark as Watching automatically once progress starts, unless already completed/dropped
+        if (item.getStatus() == WatchStatus.PLAN_TO_WATCH && episodeCount > 0) {
+            item.setStatus(WatchStatus.WATCHING);
+        }
         watchlistRepository.save(item);
     }
 
@@ -59,6 +79,6 @@ public class WatchlistService {
 
     private User getUserOrThrow(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("Hindi nahanap ang naka-log-in na user."));
+                .orElseThrow(() -> new IllegalStateException("Could not find the logged-in user."));
     }
 }

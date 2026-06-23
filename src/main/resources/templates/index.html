@@ -5,55 +5,109 @@
 <div th:replace="~{fragments :: header}"></div>
 
 <section class="hero">
-    <h1>Subaybayan ang bagong season, alamin ang pinaka-sikat.</h1>
-    <p>Hanapin ang impormasyon, score, at trailer ng kasalukuyang umaaireng anime — at i-build ang sariling watchlist mo.</p>
+    <h1>Track new seasons. Discover what's trending.</h1>
+    <p>Browse anime info, scores, and trailers — then build your own watchlist and track your episode progress.</p>
 </section>
 
 <main class="page-container">
+    <div class="home-layout">
 
-    <div class="section-title">
-        <h2>🆕 Bagong Season (Latest Anime)</h2>
-    </div>
+        <!-- ===== Vertical Top Ranking sidebar ===== -->
+        <aside class="ranking-sidebar">
+            <h3>🏆 Top Ranking</h3>
+            <ol>
+                <li th:each="anime, iter : ${topAnimePreview}">
+                    <span class="rank-no" th:text="${iter.count}">1</span>
+                    <a th:href="@{/anime/{id}(id=${anime.malId})}" class="thumb">
+                        <img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy">
+                    </a>
+                    <a th:href="@{/anime/{id}(id=${anime.malId})}" class="rank-title" th:text="${anime.title}">Title</a>
+                </li>
+            </ol>
+            <a href="/ranking" class="see-all-link">See full ranking →</a>
+        </aside>
 
-    <div class="anime-grid" th:if="${not #lists.isEmpty(latestAnime)}">
-        <a th:each="anime : ${latestAnime}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card">
-            <div class="poster-wrap">
-                <img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy">
-            </div>
-            <div class="card-body">
-                <p class="card-title" th:text="${anime.title}">Anime Title</p>
-                <div class="card-meta">
-                    <span th:text="${anime.type}">TV</span>
-                    <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+        <!-- ===== Main content sections ===== -->
+        <div class="home-main">
+
+            <!-- Continue Watching (only for logged-in users with list items) -->
+            <section class="content-section" th:if="${loggedIn}">
+                <div class="section-title"><h2>▶ Continue Watching</h2>
+                    <a href="/watchlist" th:if="${not #lists.isEmpty(continueWatching)}">See all →</a>
                 </div>
-            </div>
-        </a>
-    </div>
-    <p class="empty-state" th:if="${#lists.isEmpty(latestAnime)}">
-        Hindi available ang anime data ngayon. Pakisubukan ulit mamaya.
-    </p>
-
-    <div class="section-title">
-        <h2>🏆 Top Ranking</h2>
-        <a href="/ranking">Tingnan lahat →</a>
-    </div>
-
-    <div class="anime-grid" th:if="${not #lists.isEmpty(topAnimePreview)}">
-        <a th:each="anime, iter : ${topAnimePreview}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card rank-card">
-            <span class="rank-number" th:text="'#' + ${iter.count}">#1</span>
-            <div class="poster-wrap">
-                <img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy">
-            </div>
-            <div class="card-body">
-                <p class="card-title" th:text="${anime.title}">Anime Title</p>
-                <div class="card-meta">
-                    <span th:text="${anime.type}">TV</span>
-                    <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+                <div class="scroll-row" th:if="${not #lists.isEmpty(continueWatching)}">
+                    <a th:each="item : ${continueWatching}" th:href="@{/anime/{id}(id=${item.animeMalId})}" class="continue-card">
+                        <div class="thumb"><img th:src="${item.animeImageUrl}" th:alt="${item.animeTitle}" loading="lazy"></div>
+                        <div class="info">
+                            <p class="title" th:text="${item.animeTitle}">Title</p>
+                            <span class="episode-badge" th:text="'Episode ' + ${item.episodeProgress}">Episode 0</span>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        </a>
-    </div>
+                <div class="guest-banner" th:if="${#lists.isEmpty(continueWatching)}">
+                    <p>Your list is empty. Browse anime and add some to start tracking!</p>
+                    <a href="/trending" class="btn-primary">Explore Trending →</a>
+                </div>
+            </section>
 
+            <div class="guest-banner" th:unless="${loggedIn}">
+                <p>Sign in to build your watchlist and track your episode progress.</p>
+                <a href="/login" class="btn-primary">Login / Sign Up →</a>
+            </div>
+
+            <!-- Trending -->
+            <section class="content-section">
+                <div class="section-title"><h2>🔥 Trending Now</h2><a href="/trending">See all →</a></div>
+                <div class="scroll-row" th:if="${not #lists.isEmpty(trendingPreview)}">
+                    <a th:each="anime : ${trendingPreview}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card">
+                        <div class="poster-wrap"><img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy"></div>
+                        <div class="card-body">
+                            <p class="card-title" th:text="${anime.title}">Title</p>
+                            <div class="card-meta">
+                                <span th:text="${anime.type}">TV</span>
+                                <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Action genre row -->
+            <section class="content-section">
+                <div class="section-title"><h2>⚔ Action</h2><a href="/genre/Action">See all →</a></div>
+                <div class="scroll-row" th:if="${not #lists.isEmpty(actionPreview)}">
+                    <a th:each="anime : ${actionPreview}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card">
+                        <div class="poster-wrap"><img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy"></div>
+                        <div class="card-body">
+                            <p class="card-title" th:text="${anime.title}">Title</p>
+                            <div class="card-meta">
+                                <span th:text="${anime.type}">TV</span>
+                                <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Complete Anime row -->
+            <section class="content-section">
+                <div class="section-title"><h2>✅ Complete Anime</h2><a href="/complete">See all →</a></div>
+                <div class="scroll-row" th:if="${not #lists.isEmpty(completePreview)}">
+                    <a th:each="anime : ${completePreview}" th:href="@{/anime/{id}(id=${anime.malId})}" class="anime-card">
+                        <div class="poster-wrap"><img th:src="${anime.posterUrl}" th:alt="${anime.title}" loading="lazy"></div>
+                        <div class="card-body">
+                            <p class="card-title" th:text="${anime.title}">Title</p>
+                            <div class="card-meta">
+                                <span th:text="${anime.type}">TV</span>
+                                <span class="score-badge" th:if="${anime.score != null}" th:text="'★ ' + ${anime.score}">★ 0.0</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+        </div>
+    </div>
 </main>
 
 <div th:replace="~{fragments :: footer}"></div>

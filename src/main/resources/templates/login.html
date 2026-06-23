@@ -9,10 +9,10 @@
         <h1>Welcome Back</h1>
 
         <p class="alert alert-success" th:if="${param.registered != null}">
-            Successful ang registration! Mag-login na.
+            Registration successful! You can log in now.
         </p>
         <p class="alert alert-error" th:if="${param.error != null}">
-            Mali ang username o password.
+            Incorrect username or password.
         </p>
 
         <form action="/login" method="post">
@@ -27,7 +27,7 @@
             <button type="submit" class="btn-block">Login</button>
         </form>
 
-        <p class="form-footer-link">Wala ka pang account? <a href="/register">Mag-sign up</a></p>
+        <p class="form-footer-link">Don't have an account? <a href="/register">Sign up</a></p>
     </div>
 </main>
 

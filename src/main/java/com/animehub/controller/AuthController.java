@@ -32,18 +32,18 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute("form") RegisterForm form, Model model) {
-        // Manual validation lang dito para simple ang halimbawa; pwede mong
-        // palitan ng @Valid + BindingResult kung gusto mong mas structured.
+        // Manual validation here to keep the example simple; swap for
+        // @Valid + BindingResult if you want a more structured approach.
         if (form.username == null || form.username.trim().length() < 3) {
-            model.addAttribute("error", "Username dapat hindi bababa sa 3 characters.");
+            model.addAttribute("error", "Username must be at least 3 characters.");
             return "register";
         }
         if (form.password == null || form.password.length() < 6) {
-            model.addAttribute("error", "Password dapat hindi bababa sa 6 characters.");
+            model.addAttribute("error", "Password must be at least 6 characters.");
             return "register";
         }
         if (!form.password.equals(form.confirmPassword)) {
-            model.addAttribute("error", "Hindi tugma ang password at confirm password.");
+            model.addAttribute("error", "Password and confirm password do not match.");
             return "register";
         }
 
@@ -57,7 +57,7 @@ public class AuthController {
         return "redirect:/login?registered=true";
     }
 
-    /** Simpleng form-backing object para sa registration form. */
+    /** Simple form-backing object for the registration form. */
     public static class RegisterForm {
         @NotBlank private String username;
         @Email private String email;

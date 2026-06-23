@@ -33,6 +33,11 @@ public class WatchlistItem {
     @Column(nullable = false)
     private WatchStatus status = WatchStatus.PLAN_TO_WATCH;
 
+    // Legal episode tracker (not a video player) - lets users record which
+    // episode number they're up to, similar to MyAnimeList/AniList trackers.
+    @Column(nullable = false)
+    private Integer episodeProgress = 0;
+
     @Column(nullable = false)
     private LocalDateTime addedAt = LocalDateTime.now();
 
@@ -63,6 +68,9 @@ public class WatchlistItem {
 
     public WatchStatus getStatus() { return status; }
     public void setStatus(WatchStatus status) { this.status = status; }
+
+    public Integer getEpisodeProgress() { return episodeProgress; }
+    public void setEpisodeProgress(Integer episodeProgress) { this.episodeProgress = episodeProgress; }
 
     public LocalDateTime getAddedAt() { return addedAt; }
     public void setAddedAt(LocalDateTime addedAt) { this.addedAt = addedAt; }
